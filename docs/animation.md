@@ -1,6 +1,6 @@
 # Animated information flow
 
-[Open the architecture GIF](architecture_flow.gif) to follow data through the system. It loops every 47.5 seconds, with a moving dot showing the active data path and a caption explaining what happens. Pause-free reading is available in the outline below. The [still image](architecture_flow.png) shows the online adaptation loop.
+[Open the architecture GIF](architecture_flow.gif) to follow data through the system. It loops every 45.6 seconds, with a moving dot showing the active data path and a caption explaining what happens. A text outline is available below. The [still image](architecture_flow.png) shows the online adaptation loop.
 
 This is a narrated architecture illustration, not a recording of live training. The top row and the local event/feedback routing illustrate runnable synthetic code. Dataset construction, model fitting, release approval, LLM generation, content review, and item calibration are proposed workflows. Their boxes and paths are labeled accordingly.
 
@@ -32,4 +32,4 @@ python3 scripts/animate_architecture.py
 
 This produces `docs/architecture_flow.gif` and its PNG still. Edit `NODES` and `STEPS` in the script to change the diagram and narration. The renderer uses Python drawing primitives, portable font fallbacks, and no image-generation service. Pillow is needed only to regenerate these visuals; the assessment demo and benchmark still use the standard library.
 
-Motion runs at 25 frames per second with eased starts and stops, rounded turns, and a short arrival pause. Each narrated step still lasts 2.5 seconds. The renderer streams changed rectangles with a shared palette to keep memory use and download size small.
+Motion runs at 25 frames per second with constant speed along each path, rounded turns, and no arrival pauses or endpoint easing. Each narrated step lasts 2.4 seconds. The renderer streams changed rectangles with a shared palette to keep memory use and download size small.

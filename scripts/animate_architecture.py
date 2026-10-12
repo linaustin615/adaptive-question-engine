@@ -2,7 +2,7 @@
 
 import argparse
 from dataclasses import dataclass
-from math import cos, hypot, pi
+from math import hypot
 from pathlib import Path
 
 from PIL import GifImagePlugin, Image, ImageChops, ImageDraw, ImageFont
@@ -14,9 +14,8 @@ BACKGROUND = "#f3f6fb"
 INK = "#192c46"
 MUTED = "#5a6b80"
 BLUE, PURPLE, GREEN = "#3269bd", "#8651b5", "#128473"
-MOTION_FRAMES = 50
+MOTION_FRAMES = 60
 FRAME_MS = 40
-STEP_MS = 2500
 
 
 def font(size, bold=False):
@@ -255,11 +254,10 @@ def main(output):
             background = render(index, None)
             points = route(step)
             for number in range(MOTION_FRAMES):
-                progress = (1 - cos(pi * number / (MOTION_FRAMES - 1))) / 2
+                progress = number / (MOTION_FRAMES - 1)
                 frame = background.copy()
                 draw_particle(frame, points, progress, step.color)
-                duration = FRAME_MS if number < MOTION_FRAMES - 1 else STEP_MS - FRAME_MS * (MOTION_FRAMES - 1)
-                yield frame.quantize(palette=palette, dither=Image.Dither.NONE), duration
+                yield frame.quantize(palette=palette, dither=Image.Dither.NONE), FRAME_MS
 
     count, elapsed = write_gif(output, frames())
     render(5, 0.5).save(output.with_suffix(".png"))
