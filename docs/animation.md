@@ -31,3 +31,5 @@ python3 scripts/animate_architecture.py
 ```
 
 This produces `docs/architecture_flow.gif` and its PNG still. Edit `NODES` and `STEPS` in the script to change the diagram and narration. The renderer uses Python drawing primitives, portable font fallbacks, and no image-generation service. Pillow is needed only to regenerate these visuals; the assessment demo and benchmark still use the standard library.
+
+Motion runs at 25 frames per second with eased starts and stops, rounded turns, and a short arrival pause. Each narrated step still lasts 2.5 seconds. The renderer streams changed rectangles with a shared palette to keep memory use and download size small.

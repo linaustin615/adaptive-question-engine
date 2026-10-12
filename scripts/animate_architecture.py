@@ -2,10 +2,10 @@
 
 import argparse
 from dataclasses import dataclass
-from math import hypot
+from math import cos, hypot, pi
 from pathlib import Path
 
-from PIL import Image, ImageDraw, ImageFont
+from PIL import GifImagePlugin, Image, ImageChops, ImageDraw, ImageFont
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -14,6 +14,9 @@ BACKGROUND = "#f3f6fb"
 INK = "#192c46"
 MUTED = "#5a6b80"
 BLUE, PURPLE, GREEN = "#3269bd", "#8651b5", "#128473"
+MOTION_FRAMES = 50
+FRAME_MS = 40
+STEP_MS = 2500
 
 
 def font(size, bold=False):
@@ -107,7 +110,7 @@ STEPS = [
 ]
 
 
-def route(step):
+def control_points(step):
     source, target = BY_KEY[step.source], BY_KEY[step.target]
     if step.route == "online_return":
         a, b = source.anchor("bottom"), target.anchor("bottom")
@@ -125,6 +128,25 @@ def route(step):
         a, b = source.anchor("right"), target.anchor("bottom")
         return [a, (1420, a[1]), (1420, 410), (b[0], 410), b]
     return [source.anchor("right"), target.anchor("left")]
+
+
+def route(step):
+    """Round each right-angle turn with a short quadratic curve."""
+    points = control_points(step)
+    rounded = [points[0]]
+    for previous, corner, following in zip(points, points[1:], points[2:]):
+        before = hypot(corner[0] - previous[0], corner[1] - previous[1])
+        after = hypot(following[0] - corner[0], following[1] - corner[1])
+        radius = min(16.0, before / 2, after / 2)
+        entry = tuple(c + (p - c) * radius / before for p, c in zip(previous, corner))
+        leave = tuple(c + (p - c) * radius / after for p, c in zip(following, corner))
+        rounded.append(entry)
+        for sample in range(1, 13):
+            t = sample / 12
+            rounded.append(tuple((1 - t) ** 2 * a + 2 * (1 - t) * t * b + t ** 2 * c
+                                 for a, b, c in zip(entry, corner, leave)))
+    rounded.append(points[-1])
+    return rounded
 
 
 def arrow(draw, points, color, width=3):
@@ -177,8 +199,8 @@ def render(step_index, progress):
         for index, line in enumerate(node.lines):
             draw.text((x1 + 14, y1 + 65 + 20 * index), line, font=FONTS[16], fill=MUTED)
 
-    x, y = point_on_path(points, progress)
-    draw.ellipse((x - 9, y - 9, x + 9, y + 9), fill=step.color, outline="white", width=2)
+    if progress is not None:
+        draw_particle(image, points, progress, step.color)
     draw.rounded_rectangle((40, 810, 1400, 863), radius=10, fill="white")
     draw.text((57, 827), "MOVING DATA", font=SMALL_BOLD, fill=MUTED)
     draw.text((200, 825), step.payload, font=FONTS[19], fill=step.color)
@@ -188,21 +210,60 @@ def render(step_index, progress):
     return image
 
 
+def draw_particle(image, points, progress, color):
+    x, y = point_on_path(points, progress)
+    sprite = Image.new("RGBA", (88, 88))
+    draw = ImageDraw.Draw(sprite)
+    draw.ellipse((8, 8, 80, 80), fill=color, outline="white", width=8)
+    sprite = sprite.resize((22, 22), Image.Resampling.LANCZOS)
+    image.paste(sprite, (round(x) - 11, round(y) - 11), sprite)
+
+
+def write_gif(output, frames):
+    """Stream changed rectangles so higher frame rates do not retain every canvas."""
+    previous = None
+    count, elapsed = 0, 0
+    with output.open("wb") as stream:
+        for frame, duration in frames:
+            current = frame.convert("RGB")
+            if previous is None:
+                header, _ = GifImagePlugin.getheader(frame, info={"loop": 0, "optimize": False})
+                stream.write(b"".join(header))
+                bounds = (0, 0, *frame.size)
+            else:
+                bounds = ImageChops.difference(previous, current).getbbox()
+                bounds = bounds or (0, 0, 1, 1)  #retain timing even when rounded positions repeat
+            data = GifImagePlugin.getdata(
+                frame.crop(bounds), offset=bounds[:2], duration=duration, disposal=1,
+            )
+            stream.write(b"".join(data))
+            previous = current
+            count += 1
+            elapsed += duration
+        stream.write(b";")
+    return count, elapsed
+
+
 def main(output):
     output.parent.mkdir(parents=True, exist_ok=True)
     samples = Image.new("RGB", (SIZE[0] * 3, SIZE[1]))
     for column, step in enumerate((0, 8, 14)):
         samples.paste(render(step, 0.5), (column * SIZE[0], 0))
     palette = samples.convert("P", palette=Image.Palette.ADAPTIVE, colors=128)
-    frames, durations = [], []
-    for index in range(len(STEPS)):
-        for frame in range(10):
-            frames.append(render(index, frame / 9).quantize(palette=palette, dither=Image.Dither.NONE))
-            durations.append(120 if frame < 9 else 1420)
-    frames[0].save(output, save_all=True, append_images=frames[1:], duration=durations,
-                   loop=0, optimize=True, disposal=1)
+    def frames():
+        for index, step in enumerate(STEPS):
+            background = render(index, None)
+            points = route(step)
+            for number in range(MOTION_FRAMES):
+                progress = (1 - cos(pi * number / (MOTION_FRAMES - 1))) / 2
+                frame = background.copy()
+                draw_particle(frame, points, progress, step.color)
+                duration = FRAME_MS if number < MOTION_FRAMES - 1 else STEP_MS - FRAME_MS * (MOTION_FRAMES - 1)
+                yield frame.quantize(palette=palette, dither=Image.Dither.NONE), duration
+
+    count, elapsed = write_gif(output, frames())
     render(5, 0.5).save(output.with_suffix(".png"))
-    print(f"{output}: {len(frames)} frames, {sum(durations) / 1000:.1f}s, {output.stat().st_size / 1024 / 1024:.2f} MiB")
+    print(f"{output}: {count} frames, {elapsed / 1000:.1f}s, {output.stat().st_size / 1024 / 1024:.2f} MiB")
 
 
 if __name__ == "__main__":
