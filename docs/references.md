@@ -1,0 +1,20 @@
+# Architecture reading list
+
+These sources motivate extensions to the design. Their results apply to their study settings, not automatically to this prototype. Entries were checked on October 12, 2026. The architecture choices and evaluation budgets in this folder are proposals.
+
+| Source | Relevant idea | How to use it here |
+| --- | --- | --- |
+| Sharpnack et al., [AutoIRT: Calibrating Item Response Theory Models with Automated Machine Learning](https://arxiv.org/abs/2409.08823), 2024 | Combine item features, automated ML, and item-specific calibration | Consider feature-assisted calibration after establishing an anchored IRT baseline and obtaining responses |
+| Sharpnack et al., [BanditCAT and AutoIRT](https://arxiv.org/abs/2410.21033), 2024 | Bayesian ability updates, information-based bandit rewards, and exposure randomization | Extend the deterministic selector only after measuring its limitations; information reward concerns measurement precision |
+| Truong et al., [Reliable and Efficient Amortized Model-based Evaluation](https://arxiv.org/abs/2503.13335), 2025 | Predict difficulty from content and generate questions conditioned on difficulty | Inspiration for generation and cold-start item models; their evaluation concerns language models, not demonstrated human learning |
+| Tomikawa and Uto, [Difficulty-Controllable Multiple-Choice Question Generation Using Large Language Models and Direct Preference Optimization](https://arxiv.org/abs/2510.19265), 2025, revised March 2026 | Preference optimization for difficulty control in reading-comprehension MCQs | Possible later generation experiment requiring suitable training and evaluation data; not implemented |
+| Park et al., [Large Language Models are Students at Various Levels: Zero-shot Question Difficulty Estimation](https://aclanthology.org/2024.findings-emnlp.477/), Findings of EMNLP 2024 | Investigate LLM-based estimates of question difficulty | A candidate baseline to test against response-based calibration; predictions do not authorize score use |
+| NIST, [Artificial Intelligence Risk Management Framework: Generative Artificial Intelligence Profile](https://www.nist.gov/publications/artificial-intelligence-risk-management-framework-generative-artificial-intelligence), 2024 | Risk management for generative AI across its lifecycle | Motivates documented evaluations, provenance, review responsibilities, monitoring, and incident handling; this scaffold is not a compliance certification |
+
+The first two papers are the closest matches to calibration and adaptive administration. Read the question-generation papers after understanding why requested difficulty and measured difficulty differ. None of these sources makes a twelve-item synthetic demo sufficient to validate a human assessment.
+
+## Measurement experiment sources
+
+- Willem J. van der Linden, [Bayesian item selection criteria for adaptive testing](https://research.utwente.nl/en/publications/bayesian-item-selection-criteria-for-adaptive-testing-2/), technical report 1996; related journal article 1998. Establishes that selection using a posterior distribution is an existing line of work, not a new invention of this project.
+- Tina Su, Edison Choe, and Joshua C. Chang, [Bayesian model-averaging stochastic item selection for adaptive testing](https://arxiv.org/abs/2504.15543), 2025, revised March 2026; under review in the checked version. Studies entropy-based stochastic selection and exposure. Our epsilon mixture is a simple experimental baseline, not an implementation or reproduction of their proposed algorithm.
+- Chen Tian and Jaehwa Choi, [The Impact of Item Model Parameter Variations on Person Parameter Estimation in Computerized Adaptive Testing With Automatically Generated Items](https://pubmed.ncbi.nlm.nih.gov/37283592/), 2023. Studies within-family item variation and consequences for ability estimates. This motivates sensitivity checks for generated siblings; it does not validate our chosen family cap or synthetic correlation model.

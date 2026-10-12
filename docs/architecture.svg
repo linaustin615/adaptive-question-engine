@@ -1,0 +1,96 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="1080" viewBox="0 0 1440 1080" role="img" aria-labelledby="title desc">
+<title id="title">Adaptive assessment architecture</title>
+<desc id="desc">Three connected flows: generate and review questions, select and score assessment items, and use feedback for practice and offline model development. A shared audit layer records decisions.</desc>
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8" fill="none" stroke="#64748b" stroke-width="1.4"/></marker></defs>
+<rect width="1440" height="1080" rx="20" fill="#f4f7fb"/>
+<style>text{font-family:Arial,Helvetica,sans-serif;fill:#14263d}.title{font-size:32px;font-weight:700}.sub{font-size:17px;fill:#526276}.lane{font-size:17px;font-weight:700;letter-spacing:1px}.head{font-size:20px;font-weight:700}.body{font-size:16px}.note{font-size:14px;fill:#526276}</style>
+<text x="50" y="61" class="title">Adaptive assessment architecture</text>
+<text x="50" y="94" class="sub">Python blueprint · synthetic executable core · proposed production extensions</text>
+<rect x="38" y="124" width="404" height="690" rx="16" fill="#168879" opacity="0.05"/>
+<text x="50" y="156" class="lane">01  BUILD THE ITEM BANK</text>
+<rect x="518" y="124" width="404" height="690" rx="16" fill="#3766bf" opacity="0.05"/>
+<text x="530" y="156" class="lane">02  MEASURE ABILITY</text>
+<rect x="998" y="124" width="404" height="690" rx="16" fill="#9460b8" opacity="0.05"/>
+<text x="1010" y="156" class="lane">03  PERSONALIZE PRACTICE</text>
+<rect x="50" y="180" width="380" height="112" rx="12" fill="white" stroke="#168879" stroke-width="2"/>
+<rect x="50" y="194" width="5" height="82" rx="2" fill="#168879"/>
+<text x="70" y="211" class="head">Generate a draft</text>
+<text x="70" y="239" class="body">Skill + sources + intended difficulty</text>
+<text x="70" y="261" class="body">Template now; LLM adapter later</text>
+<rect x="50" y="346" width="380" height="112" rx="12" fill="white" stroke="#168879" stroke-width="2"/>
+<rect x="50" y="360" width="5" height="82" rx="2" fill="#168879"/>
+<text x="70" y="377" class="head">Validate and review</text>
+<text x="70" y="405" class="body">Format, key, ambiguity, duplicates</text>
+<text x="70" y="427" class="body">Reviewer approval before pilot use</text>
+<rect x="50" y="512" width="380" height="112" rx="12" fill="white" stroke="#168879" stroke-width="2"/>
+<rect x="50" y="526" width="5" height="82" rx="2" fill="#168879"/>
+<text x="70" y="543" class="head">Pilot and calibrate</text>
+<text x="70" y="571" class="body">Unscored human response collection</text>
+<text x="70" y="593" class="body">Fit parameters and validate the scale</text>
+<rect x="50" y="678" width="380" height="112" rx="12" fill="white" stroke="#168879" stroke-width="2"/>
+<rect x="50" y="692" width="5" height="82" rx="2" fill="#168879"/>
+<text x="70" y="709" class="head">Release a versioned bank</text>
+<text x="70" y="737" class="body">Approved item + calibration version</text>
+<text x="70" y="759" class="body">Drafts remain outside scored delivery</text>
+<rect x="530" y="180" width="380" height="112" rx="12" fill="white" stroke="#3766bf" stroke-width="2"/>
+<rect x="530" y="194" width="5" height="82" rx="2" fill="#3766bf"/>
+<text x="550" y="211" class="head">Open an assessment</text>
+<text x="550" y="239" class="body">Pin skill, bank, policy, and stop rules</text>
+<text x="550" y="261" class="body">Start from an ability prior</text>
+<rect x="530" y="346" width="380" height="112" rx="12" fill="white" stroke="#3766bf" stroke-width="2"/>
+<rect x="530" y="360" width="5" height="82" rx="2" fill="#3766bf"/>
+<text x="550" y="377" class="head">Choose the next item</text>
+<text x="550" y="405" class="body">Fisher baseline or information gain</text>
+<text x="550" y="427" class="body">Optional family cap and exploration</text>
+<rect x="530" y="512" width="380" height="112" rx="12" fill="white" stroke="#3766bf" stroke-width="2"/>
+<rect x="530" y="526" width="5" height="82" rx="2" fill="#3766bf"/>
+<text x="550" y="543" class="head">Grade and update ability</text>
+<text x="550" y="571" class="body">Stored answer key → 2PL posterior</text>
+<text x="550" y="593" class="body">Ability + uncertainty + interval</text>
+<rect x="530" y="678" width="380" height="112" rx="12" fill="white" stroke="#3766bf" stroke-width="2"/>
+<rect x="530" y="692" width="5" height="82" rx="2" fill="#3766bf"/>
+<text x="550" y="709" class="head">Stop or select again</text>
+<text x="550" y="737" class="body">Precision, length, bank, or family limit</text>
+<text x="550" y="759" class="body">Report why the session stopped</text>
+<rect x="1010" y="180" width="380" height="112" rx="12" fill="white" stroke="#9460b8" stroke-width="2"/>
+<rect x="1010" y="194" width="5" height="82" rx="2" fill="#9460b8"/>
+<text x="1030" y="211" class="head">Receive learner feedback</text>
+<text x="1030" y="239" class="body">Correctness, challenge preferences</text>
+<text x="1030" y="261" class="body">Content reports use a review path</text>
+<rect x="1010" y="346" width="380" height="112" rx="12" fill="white" stroke="#9460b8" stroke-width="2"/>
+<rect x="1010" y="360" width="5" height="82" rx="2" fill="#9460b8"/>
+<text x="1030" y="377" class="head">Update practice state</text>
+<text x="1030" y="405" class="body">Weak skills + requested challenge</text>
+<text x="1030" y="427" class="body">Feedback does not rewrite exam scores</text>
+<rect x="1010" y="512" width="380" height="112" rx="12" fill="white" stroke="#9460b8" stroke-width="2"/>
+<rect x="1010" y="526" width="5" height="82" rx="2" fill="#9460b8"/>
+<text x="1030" y="543" class="head">Evaluate measurement</text>
+<text x="1030" y="571" class="body">Paired simulation and policy ablations</text>
+<text x="1030" y="593" class="body">Correlation and calibration stress tests</text>
+<rect x="1010" y="678" width="380" height="112" rx="12" fill="white" stroke="#9460b8" stroke-width="2"/>
+<rect x="1010" y="692" width="5" height="82" rx="2" fill="#9460b8"/>
+<text x="1030" y="709" class="head">Evaluate and release models</text>
+<text x="1030" y="737" class="body">Baseline, quality, and subgroup checks</text>
+<text x="1030" y="759" class="body">Approved registry version + rollback</text>
+<path d="M240,296 L240,340" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)"/>
+<path d="M240,462 L240,506" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)"/>
+<path d="M240,628 L240,672" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)"/>
+<path d="M720,296 L720,340" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)"/>
+<path d="M720,462 L720,506" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)"/>
+<path d="M720,628 L720,672" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)"/>
+<path d="M1200,296 L1200,340" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)"/>
+<path d="M1200,462 L1200,506" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)"/>
+<path d="M1200,628 L1200,672" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)"/>
+<path d="M430,734 L477,734 L477,402 L524,402" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)"/>
+<path d="M910,734 L952,734 L952,402 L916,402" fill="none" stroke="#64748b" stroke-width="2" stroke-dasharray="7 5" marker-end="url(#arrow)"/>
+<text x="443" y="775" class="note">bank</text>
+<text x="929" y="775" class="note">loop</text>
+<path d="M240,794 L240,853" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)" stroke-dasharray="7 5"/>
+<path d="M720,794 L720,853" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)" stroke-dasharray="7 5"/>
+<path d="M1200,794 L1200,853" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)" stroke-dasharray="7 5"/>
+<rect x="50" y="860" width="1340" height="98" rx="12" fill="#e2eaf5"/>
+<text x="74" y="893" class="head">Shared audit and provenance</text>
+<text x="74" y="924" class="body">Record versions, candidate utilities, selection probabilities, outcomes, and review actions</text>
+<text x="50" y="999" class="sub">Feedback loop: confirmed content issues → versioned generation guidance; approved model releases → serving policies</text>
+<text x="50" y="1030" class="note">Implemented: synthetic scoring, policy experiments, feedback routing, template draft, and local events. Training remains a future boundary.</text>
+</svg>

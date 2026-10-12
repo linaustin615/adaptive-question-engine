@@ -1,0 +1,14 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "adaptive-question-engine"
+version = "0.1.0"
+description = "An educational Python blueprint for adaptive questions, IRT scoring, and auditable feedback"
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = []
+
+[tool.setuptools.packages.find]
+include = ["adaptive_assessment*"]
